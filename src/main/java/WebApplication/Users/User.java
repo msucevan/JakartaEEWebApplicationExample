@@ -1,15 +1,25 @@
 package WebApplication.Users;
 
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import java.io.Serializable;
 import java.time.format.DateTimeFormatter;
 
+@NamedQueries({
+        @NamedQuery(name = User.FIND_ALL, query = "select e from User e order by e.lastName"),
+        @NamedQuery(name = User.FIND_BY_USR_PWD, query = "select e from User e where e.usr= :usr and e.pwd= :pwd"),
+        @NamedQuery(name = User.FIND_BY_USR, query = "select e from User e where e.usr= :usr"),
+        @NamedQuery(name = User.SEARCH, query = "select e from User e where e.firstName like :fname or e.lastName like :lname or e.usr like :usr")
+})
 @Entity
 @Table(name="user")
-public class User {
+public class User implements Serializable {
+    public static final String FIND_ALL = "User.findAll";
+    public static final String FIND_BY_USR_PWD = "User.findByUserPwd";
+    public static final String FIND_BY_USR = "User.findByUser";
+    public static final String SEARCH = "User.search";
+
     @NotEmpty
     @Column(name = "usr", nullable = false, unique = true)
     private String usr;
